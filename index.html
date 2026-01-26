@@ -8,6 +8,15 @@
     <link href="/src/style.css" rel="stylesheet" />
   </head>
   <body>
+    <style>
+      #favorites-list::-webkit-scrollbar {
+        display: none;
+      }
+      #favorites-list {
+        -ms-overflow-style: none; /* IE y Edge */
+        scrollbar-width: none; /* Firefox */
+      }
+    </style>
     <!--
     
     INSTRUCCIONES:
@@ -43,9 +52,44 @@
       </nav>
     </header>
 
-    <section>
-      <article></article>
+    <section class="p-10 flex flex-col gap-5">
+      <h2 class="font-bold text-2xl">Productos Favoritos</h2>
+      <div
+        class="flex flex-row gap-10 overflow-x-auto overflow-y-hidden"
+        id="favorites-list"
+      ></div>
     </section>
     <footer></footer>
+    <script type="module">
+      import { cafes } from "./cafes.js";
+
+      // JS functions
+
+      const createCard = (coffee) => {
+        const card = document.createElement("article");
+        card.className =
+          "flex flex-col gap-2 rounded-md min-w-[250px] overflow-hidden border-1 border-gray-400";
+        card.innerHTML = ` 
+          <img class="w-full h-[200px] object-cover" src="${coffee.imagen}" alt="${coffee.titulo}" />
+          <div class="flex flex-col p-3 gap-3">
+            <h3 class="font-bold text-xl">${coffee.titulo}</h3>
+            <p class="text-md">${coffee.descripcion}</p>
+          </div>
+       `;
+        return card;
+      };
+
+      // JS functions
+
+      const container = document.getElementById("favorites-list");
+      const fragment = document.createDocumentFragment();
+
+      cafes.forEach((coffee) => {
+        const newCard = createCard(coffee);
+        fragment.appendChild(newCard);
+      });
+
+      container.appendChild(fragment);
+    </script>
   </body>
 </html>

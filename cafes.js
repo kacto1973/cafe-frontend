@@ -1,0 +1,123 @@
+export const cafes = [
+  {
+    imagen: "https://images.unsplash.com/photo-1509042239860-f550ce710b93",
+    titulo: "Café Oaxaca",
+    descripcion:
+      "Tostado medio con notas a cacao y nuez. Balanceado y aromático.",
+    precio: 180,
+  },
+  {
+    imagen: "https://images.unsplash.com/photo-1511920170033-f8396924c348",
+    titulo: "Café Chiapas",
+    descripcion: "Cuerpo intenso, tostado oscuro y sabor profundo.",
+    precio: 195,
+  },
+  {
+    imagen: "https://images.unsplash.com/photo-1523942839745-7848d17d4a15",
+    titulo: "Café Veracruz",
+    descripcion: "Ligero y afrutado, ideal para métodos filtrados.",
+    precio: 170,
+  },
+  {
+    imagen: "https://images.unsplash.com/photo-1509785307050-d4066910ec1e",
+    titulo: "Espresso Clásico",
+    descripcion: "Mezcla intensa pensada para espresso. Crema densa.",
+    precio: 160,
+  },
+  {
+    imagen: "https://images.unsplash.com/photo-1510626176961-4b57d4fbad03",
+    titulo: "Café Colombiano",
+    descripcion: "Equilibrado, suave acidez y notas dulces.",
+    precio: 210,
+  },
+  {
+    imagen: "https://images.unsplash.com/photo-1517685352821-92cf88aee5a5",
+    titulo: "Café Etiopía",
+    descripcion: "Aromas florales y cítricos. Perfil brillante.",
+    precio: 230,
+  },
+  {
+    imagen: "https://images.unsplash.com/photo-1504754524776-8f4f37790ca0",
+    titulo: "Café Guatemala",
+    descripcion: "Cuerpo medio con notas a chocolate oscuro.",
+    precio: 205,
+  },
+  {
+    imagen: "https://images.unsplash.com/photo-1504639725590-34d0984388bd",
+    titulo: "Café Brasil",
+    descripcion: "Suave, achocolatado y de baja acidez.",
+    precio: 190,
+  },
+  {
+    imagen: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd",
+    titulo: "Café Perú",
+    descripcion: "Orgánico, con notas a caramelo y frutos secos.",
+    precio: 215,
+  },
+  {
+    imagen: "https://images.unsplash.com/photo-1515442261605-65987783cb6a",
+    titulo: "Café House Blend",
+    descripcion: "Mezcla de la casa balanceada para cualquier momento.",
+    precio: 165,
+  },
+  {
+    imagen: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4",
+    titulo: "Café Tostado Claro",
+    descripcion: "Resalta acidez y notas frutales naturales.",
+    precio: 175,
+  },
+  {
+    imagen: "https://images.unsplash.com/photo-1512568400610-62da28bc8a13",
+    titulo: "Café Tostado Oscuro",
+    descripcion: "Intenso, amargo y robusto.",
+    precio: 185,
+  },
+  {
+    imagen: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085",
+    titulo: "Café Vainilla",
+    descripcion: "Saborizado suavemente con vainilla natural.",
+    precio: 200,
+  },
+  {
+    imagen: "https://images.unsplash.com/photo-1509463531435-61f73f4c9c35",
+    titulo: "Café Avellana",
+    descripcion: "Aroma dulce y notas tostadas de avellana.",
+    precio: 200,
+  },
+  {
+    imagen: "https://images.unsplash.com/photo-1498804103079-a6351b050096",
+    titulo: "Café Descafeinado",
+    descripcion: "Todo el sabor, sin cafeína.",
+    precio: 190,
+  },
+  {
+    imagen: "https://images.unsplash.com/photo-1504674900247-0877df9cc836",
+    titulo: "Cold Brew",
+    descripcion: "Ideal para preparar en frío, suave y refrescante.",
+    precio: 210,
+  },
+  {
+    imagen: "https://images.unsplash.com/photo-1522992319-0365e5f11656",
+    titulo: "Café Artesanal",
+    descripcion: "Producción limitada, tostado artesanal.",
+    precio: 250,
+  },
+  {
+    imagen: "https://images.unsplash.com/photo-1497515114629-f71d768fd07c",
+    titulo: "Café Orgánico",
+    descripcion: "Cultivo sustentable, sabor limpio.",
+    precio: 220,
+  },
+  {
+    imagen: "https://images.unsplash.com/photo-1517959105821-eaf2591984ca",
+    titulo: "Café Premium",
+    descripcion: "Selección de granos de alta calidad.",
+    precio: 280,
+  },
+  {
+    imagen: "https://images.unsplash.com/photo-1521401292936-0a2129a30b1c",
+    titulo: "Café Edición Especial",
+    descripcion: "Lote único con perfil exclusivo.",
+    precio: 300,
+  },
+];
