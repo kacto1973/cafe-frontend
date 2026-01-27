@@ -13,7 +13,7 @@ export const cafes = [
     precio: 195,
   },
   {
-    imagen: "https://images.unsplash.com/photo-1523942839745-7848d17d4a15",
+    imagen: "https://hotelesemporio.com/wp-content/uploads/2024/04/CafeInt.jpg",
     titulo: "Café Veracruz",
     descripcion: "Ligero y afrutado, ideal para métodos filtrados.",
     precio: 170,

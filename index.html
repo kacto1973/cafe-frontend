@@ -35,11 +35,14 @@
     <header
       class="bg-black text-white flex flex-row p-5 items-center justify-between"
     >
-      <h1 class="font-bold text-2xl cursor-pointer p-2">Tienda de Café</h1>
+      <h1 class="font-bold text-2xl cursor-pointer p-2">
+        Tienda de Café "Las 3 Torres"
+      </h1>
       <nav>
         <ul class="flex flex-row gap-5">
           <li
             class="font-bold text-md p-3 rounded-md hover:bg-white hover:text-black hover:cursor-pointer transition-colors duration-300"
+            id="login-button"
           >
             Iniciar Sesión
           </li>
@@ -53,27 +56,99 @@
     </header>
 
     <section class="p-10 flex flex-col gap-5">
-      <h2 class="font-bold text-2xl">Productos Favoritos</h2>
+      <h2 class="font-bold text-2xl">Tus Productos Favoritos</h2>
       <div
         class="flex flex-row gap-10 overflow-x-auto overflow-y-hidden"
         id="favorites-list"
       ></div>
     </section>
-    <footer></footer>
+    <section class="p-10 flex flex-col gap-5">
+      <h2 class="font-bold text-2xl">Nuestros Productos</h2>
+      <div class="grid grid-cols-5 gap-5" id="products-list"></div>
+    </section>
+    <footer class="bg-black text-white p-10 flex flex-col">
+      <p class="font-bold text-lg">Tienda de Café "Las 3 Torres"</p>
+      <p class="font-light text-md">
+        Blvd. Independencia #1234, Torreón, Coahuila
+      </p>
+      <p class="font-light text-md">☎️+52 662 423 7920</p>
+    </footer>
     <script type="module">
       import { cafes } from "./cafes.js";
 
       // JS functions
 
+      const cerrarModal = () => {
+        document.body.removeChild(
+          document.getElementById("login-modal-overlay"),
+        );
+        document.body.removeChild(document.getElementById("login-modal"));
+      };
+
+      const handleLogin = () => {
+        // Lógica de autenticación simulada
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+        if (username === "1111" && password === "1111") {
+          localStorage.setItem("loggedIn", "true");
+          alert("Inicio de sesión exitoso");
+          cerrarModal();
+        } else {
+          alert("Credenciales incorrectas");
+        }
+      };
+
+      const showLoginModal = () => {
+        const overlay = document.createElement("div");
+        overlay.className =
+          "fixed inset-0 bg-black opacity-50 flex items-center justify-center";
+        overlay.id = "login-modal-overlay";
+
+        const modal = document.createElement("div");
+        modal.className =
+          "w-[300px] bg-white p-5 rounded-md absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col gap-5 justify-center items-center";
+        modal.id = "login-modal";
+
+        let contenidoHTML = `
+          <h3 class="text-black font-bold text-lg">Iniciar Sesión</h3>
+          <span class="absolute top-5 right-5 cursor-pointer font-bold text-lg" id="close-modal">&times;</span>
+          <input id="username" class="w-full p-2 border-1 border-gray-400 rounded-md" type="text" placeholder="Usuario" />
+          <input id="password" class="w-full p-2 border-1 border-gray-400 rounded-md" type="password" placeholder="Contraseña" />
+          <button id="login-submit" class="w-full bg-black text-white p-2 rounded-md hover:bg-gray-800 transition-colors duration-300">Ingresar</button>
+        `;
+
+        modal.innerHTML = contenidoHTML;
+
+        document.body.appendChild(overlay);
+        document.body.appendChild(modal);
+
+        document
+          .getElementById("login-submit")
+          .addEventListener("click", () => {
+            handleLogin();
+          });
+
+        document.getElementById("close-modal").addEventListener("click", () => {
+          cerrarModal();
+        });
+      };
+
       const createCard = (coffee) => {
         const card = document.createElement("article");
         card.className =
           "flex flex-col gap-2 rounded-md min-w-[250px] overflow-hidden border-1 border-gray-400";
-        card.innerHTML = ` 
+        card.innerHTML = `
           <img class="w-full h-[200px] object-cover" src="${coffee.imagen}" alt="${coffee.titulo}" />
           <div class="flex flex-col p-3 gap-3">
-            <h3 class="font-bold text-xl">${coffee.titulo}</h3>
+            <div class="flex flex-row">     
+              <h3 class="font-bold text-xl">${coffee.titulo}</h3>
+              <span class="font-bold text-lg text-green-600 ml-5">$${coffee.precio}</span>
+            </div>
             <p class="text-md">${coffee.descripcion}</p>
+            <div class="flex flex-row ">
+              <button class="bg-black text-white p-2 rounded-md hover:bg-gray-800 transition-colors duration-300">Ordenar</button>  
+              <button class="ml-5 bg-pink-500 text-white p-2 rounded-md hover:bg-pink-600 transition-colors duration-300">Favorito</button>
+              </div>
           </div>
        `;
         return card;
@@ -81,15 +156,35 @@
 
       // JS functions
 
-      const container = document.getElementById("favorites-list");
-      const fragment = document.createDocumentFragment();
+      //////////////// Productos favoritos
+
+      const favoritesContainer = document.getElementById("favorites-list");
+      const favoritesFragment = document.createDocumentFragment();
 
       cafes.forEach((coffee) => {
         const newCard = createCard(coffee);
-        fragment.appendChild(newCard);
+        favoritesFragment.appendChild(newCard);
       });
 
-      container.appendChild(fragment);
+      favoritesContainer.appendChild(favoritesFragment);
+
+      //////////////// Nuestros productos
+
+      const productsContainer = document.getElementById("products-list");
+      const productsFragment = document.createDocumentFragment();
+
+      cafes.forEach((coffee) => {
+        const newCard = createCard(coffee);
+        productsFragment.appendChild(newCard);
+      });
+
+      productsContainer.appendChild(productsFragment);
+
+      //////////////// Event Listeners
+
+      document.getElementById("login-button").addEventListener("click", () => {
+        showLoginModal();
+      });
     </script>
   </body>
 </html>
