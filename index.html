@@ -22,12 +22,12 @@
     INSTRUCCIONES:
 
     -usuario debe guardar productos para pedir las mañanas como favoritos
-    -Tiene que haber un login o alguna forma simulando que entró un usuario
+    -(X)Tiene que haber un login o alguna forma simulando que entró un usuario
     y que detecta los favoritos para pedirlo constantemente
-    -Que aparezca los productos marcados como favoritos.
+    -(X)Que aparezca los productos marcados como favoritos.
     -Meterle popularidad.
-    -Poder ordenar como favoritos. 
-    -Consumir api starbucks. 
+    -(X)Poder ordenar como favoritos. 
+    -(X)Consumir api starbucks. 
       
     ***Mandar msd tardar mañana 9:30 am repo y lo que hayamos avanzado
 
@@ -64,7 +64,7 @@
     </section>
     <section class="p-10 flex flex-col gap-5">
       <h2 class="font-bold text-2xl">Nuestros Productos</h2>
-      <div class="grid grid-cols-5 gap-5" id="products-list"></div>
+      <div class="grid grid-cols-3 gap-5" id="products-list"></div>
     </section>
     <footer class="bg-black text-white p-10 flex flex-col">
       <p class="font-bold text-lg">Tienda de Café "Las 3 Torres"</p>
@@ -77,6 +77,56 @@
       import { cafes } from "./cafes.js";
 
       // JS functions
+
+      const handleRemoveFavorite = (coffee) => {
+        let favoritesArray =
+          JSON.parse(localStorage.getItem("favorites")) || [];
+
+        favoritesArray = favoritesArray.filter(
+          (element) => element.id !== coffee.id,
+        );
+
+        localStorage.setItem("favorites", JSON.stringify(favoritesArray));
+
+        // Remover del DOM
+        const favoritesContainer = document.getElementById("favorites-list");
+        favoritesContainer.innerHTML = "";
+
+        const favoritesFragment = document.createDocumentFragment();
+
+        favoritesArray.forEach((coffee) => {
+          const newCard = createFavoriteCard(coffee);
+          favoritesFragment.appendChild(newCard);
+        });
+
+        favoritesContainer.appendChild(favoritesFragment);
+      };
+
+      const addToFavorites = (coffee) => {
+        const favoritesArray =
+          JSON.parse(localStorage.getItem("favorites")) || [];
+
+        const elementExists = favoritesArray.some(
+          (element) => element.id === coffee.id,
+        );
+
+        if (!elementExists) {
+          favoritesArray.push(coffee);
+          localStorage.setItem("favorites", JSON.stringify(favoritesArray));
+        }
+
+        // Agregar al DOM
+        const favoritesContainer = document.getElementById("favorites-list");
+        favoritesContainer.innerHTML = "";
+
+        const favoritesFragment = document.createDocumentFragment();
+
+        favoritesArray.forEach((coffee) => {
+          const newCard = createFavoriteCard(coffee);
+          favoritesFragment.appendChild(newCard);
+        });
+        favoritesContainer.appendChild(favoritesFragment);
+      };
 
       const cerrarModal = () => {
         document.body.removeChild(
@@ -133,24 +183,54 @@
         });
       };
 
-      const createCard = (coffee) => {
+      const createFavoriteCard = (coffee) => {
         const card = document.createElement("article");
         card.className =
-          "flex flex-col gap-2 rounded-md min-w-[250px] overflow-hidden border-1 border-gray-400";
+          "flex flex-col gap-2 rounded-md min-w-[400px] max-w-[400px] overflow-hidden border-1 border-gray-400";
         card.innerHTML = `
           <img class="w-full h-[200px] object-cover" src="${coffee.imagen}" alt="${coffee.titulo}" />
+
           <div class="flex flex-col p-3 gap-3">
-            <div class="flex flex-row">     
-              <h3 class="font-bold text-xl">${coffee.titulo}</h3>
-              <span class="font-bold text-lg text-green-600 ml-5">$${coffee.precio}</span>
-            </div>
+            <h3 class="font-bold text-xl">${coffee.titulo} - <span class="text-green-500">$${coffee.precio}</span></h3>
             <p class="text-md">${coffee.descripcion}</p>
-            <div class="flex flex-row ">
-              <button class="bg-black text-white p-2 rounded-md hover:bg-gray-800 transition-colors duration-300">Ordenar</button>  
-              <button class="ml-5 bg-pink-500 text-white p-2 rounded-md hover:bg-pink-600 transition-colors duration-300">Favorito</button>
-              </div>
+            <div class="flex flex-row">
+              <button id="remove-favorite-button" class="bg-red-400 text-white p-2 rounded-md hover:bg-red-500 transition-colors duration-300 mr-2">Remover</button>
+              <button class="ml-2 bg-green-600 text-white p-2 rounded-md hover:bg-green-700 transition-colors duration-300">Ordenar</button>
+            </div>
           </div>
        `;
+
+        const removeButton = card.querySelector("#remove-favorite-button");
+        removeButton.addEventListener("click", () => {
+          handleRemoveFavorite(coffee);
+        });
+
+        return card;
+      };
+
+      const createProductCard = (coffee) => {
+        const card = document.createElement("article");
+        card.className =
+          "flex flex-col rounded-md min-w-[400px] overflow-hidden border-1 border-gray-400";
+        card.innerHTML = `
+          <img class="w-full h-[200px] object-cover" src="${coffee.imagen}" alt="${coffee.titulo}" />
+
+          <div class="flex flex-col p-5 gap-3">
+            <h3 class="font-bold text-xl">${coffee.titulo} - <span class="text-green-500">$${coffee.precio}</span></h3>
+            <p class="text-md">${coffee.descripcion}</p>
+            <div class="flex flex-row">
+              <button id="favorite-button" class="bg-yellow-400 text-white p-2 rounded-md hover:bg-yellow-500 transition-colors duration-300 mr-2">Favorito</button>
+              <button class="ml-2 bg-green-600 text-white p-2 rounded-md hover:bg-green-700 transition-colors duration-300">Ordenar</button>
+            </div>
+          </div>
+       `;
+
+        const favoriteButton = card.querySelector("#favorite-button");
+        favoriteButton.addEventListener("click", () => {
+          addToFavorites(coffee);
+          alert(`${coffee.titulo} ha sido agregado a tus favoritos.`);
+        });
+
         return card;
       };
 
@@ -161,12 +241,18 @@
       const favoritesContainer = document.getElementById("favorites-list");
       const favoritesFragment = document.createDocumentFragment();
 
-      cafes.forEach((coffee) => {
-        const newCard = createCard(coffee);
-        favoritesFragment.appendChild(newCard);
-      });
+      const favoritesList = JSON.parse(localStorage.getItem("favorites")) || [];
 
-      favoritesContainer.appendChild(favoritesFragment);
+      if (favoritesList.length > 0) {
+        favoritesList.forEach((coffee) => {
+          const newCard = createFavoriteCard(coffee);
+          favoritesFragment.appendChild(newCard);
+        });
+
+        favoritesContainer.appendChild(favoritesFragment);
+      } else {
+        favoritesContainer.innerHTML = `<p class="font-light text-md">No tienes productos favoritos aún. Agrega algunos desde la sección de productos.</p>`;
+      }
 
       //////////////// Nuestros productos
 
@@ -174,7 +260,7 @@
       const productsFragment = document.createDocumentFragment();
 
       cafes.forEach((coffee) => {
-        const newCard = createCard(coffee);
+        const newCard = createProductCard(coffee);
         productsFragment.appendChild(newCard);
       });
 
