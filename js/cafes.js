@@ -3,9 +3,9 @@ export const cafes = [
     id: 1,
     imagen: "https://images.unsplash.com/photo-1509042239860-f550ce710b93",
     titulo: "Café Oaxaca",
-    descripcion:
-      "Tostado medio con notas a cacao y nuez. Balanceado y aromático.",
+    descripcion: "Tostado medio con notas a cacao y nuez.",
     precio: 180,
+    popularidad: 132,
   },
   {
     id: 2,
@@ -13,6 +13,7 @@ export const cafes = [
     titulo: "Café Chiapas",
     descripcion: "Cuerpo intenso, tostado oscuro y sabor profundo.",
     precio: 195,
+    popularidad: 118,
   },
   {
     id: 3,
@@ -21,6 +22,7 @@ export const cafes = [
     titulo: "Café Veracruz",
     descripcion: "Ligero y afrutado, ideal para métodos filtrados.",
     precio: 170,
+    popularidad: 87,
   },
   {
     id: 4,
@@ -28,6 +30,7 @@ export const cafes = [
     titulo: "Espresso Clásico",
     descripcion: "Mezcla intensa pensada para espresso. Crema densa.",
     precio: 160,
+    popularidad: 145,
   },
   {
     id: 5,
@@ -35,6 +38,7 @@ export const cafes = [
     titulo: "Café Colombiano",
     descripcion: "Equilibrado, suave acidez y notas dulces.",
     precio: 210,
+    popularidad: 126,
   },
   {
     id: 6,
@@ -42,6 +46,7 @@ export const cafes = [
     titulo: "Café Etiopía",
     descripcion: "Aromas florales y cítricos. Perfil brillante.",
     precio: 230,
+    popularidad: 94,
   },
   {
     id: 7,
@@ -49,6 +54,7 @@ export const cafes = [
     titulo: "Café Guatemala",
     descripcion: "Cuerpo medio con notas a chocolate oscuro.",
     precio: 205,
+    popularidad: 101,
   },
   {
     id: 8,
@@ -56,6 +62,7 @@ export const cafes = [
     titulo: "Café Brasil",
     descripcion: "Suave, achocolatado y de baja acidez.",
     precio: 190,
+    popularidad: 112,
   },
   {
     id: 9,
@@ -63,6 +70,7 @@ export const cafes = [
     titulo: "Café Perú",
     descripcion: "Orgánico, con notas a caramelo y frutos secos.",
     precio: 215,
+    popularidad: 76,
   },
   {
     id: 10,
@@ -70,6 +78,7 @@ export const cafes = [
     titulo: "Café House Blend",
     descripcion: "Mezcla de la casa balanceada para cualquier momento.",
     precio: 165,
+    popularidad: 138,
   },
   {
     id: 11,
@@ -77,6 +86,7 @@ export const cafes = [
     titulo: "Café Tostado Claro",
     descripcion: "Resalta acidez y notas frutales naturales.",
     precio: 175,
+    popularidad: 69,
   },
   {
     id: 12,
@@ -84,6 +94,7 @@ export const cafes = [
     titulo: "Café Tostado Oscuro",
     descripcion: "Intenso, amargo y robusto.",
     precio: 185,
+    popularidad: 121,
   },
   {
     id: 13,
@@ -91,6 +102,7 @@ export const cafes = [
     titulo: "Café Vainilla",
     descripcion: "Saborizado suavemente con vainilla natural.",
     precio: 200,
+    popularidad: 83,
   },
   {
     id: 14,
@@ -98,6 +110,7 @@ export const cafes = [
     titulo: "Café Avellana",
     descripcion: "Aroma dulce y notas tostadas de avellana.",
     precio: 200,
+    popularidad: 79,
   },
   {
     id: 15,
@@ -105,6 +118,7 @@ export const cafes = [
     titulo: "Café Descafeinado",
     descripcion: "Todo el sabor, sin cafeína.",
     precio: 190,
+    popularidad: 65,
   },
   {
     id: 16,
@@ -112,6 +126,7 @@ export const cafes = [
     titulo: "Cold Brew",
     descripcion: "Ideal para preparar en frío, suave y refrescante.",
     precio: 210,
+    popularidad: 109,
   },
   {
     id: 17,
@@ -119,6 +134,7 @@ export const cafes = [
     titulo: "Café Artesanal",
     descripcion: "Producción limitada, tostado artesanal.",
     precio: 250,
+    popularidad: 58,
   },
   {
     id: 18,
@@ -126,6 +142,7 @@ export const cafes = [
     titulo: "Café Orgánico",
     descripcion: "Cultivo sustentable, sabor limpio.",
     precio: 220,
+    popularidad: 97,
   },
   {
     id: 19,
@@ -133,6 +150,7 @@ export const cafes = [
     titulo: "Café Premium",
     descripcion: "Selección de granos de alta calidad.",
     precio: 280,
+    popularidad: 41,
   },
   {
     id: 20,
@@ -140,5 +158,6 @@ export const cafes = [
     titulo: "Café Edición Especial",
     descripcion: "Lote único con perfil exclusivo.",
     precio: 300,
+    popularidad: 23,
   },
 ];
