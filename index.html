@@ -38,19 +38,7 @@
         Tienda de Café "Las 3 Torres"
       </h1>
       <nav>
-        <ul class="flex flex-row gap-5">
-          <li
-            class="font-bold text-md p-3 rounded-md hover:bg-white hover:text-black hover:cursor-pointer transition-colors duration-300"
-            id="login-button"
-          >
-            Iniciar Sesión
-          </li>
-          <li
-            class="font-bold text-md p-3 rounded-md hover:bg-white hover:text-black hover:cursor-pointer transition-colors duration-300"
-          >
-            Registrarme
-          </li>
-        </ul>
+        <ul class="flex flex-row gap-5" id="auth-nav"></ul>
       </nav>
     </header>
 
@@ -94,6 +82,53 @@
 
       // JS functions
 
+      const renderAuthNav = () => {
+        const authNav = document.getElementById("auth-nav");
+        authNav.innerHTML = "";
+        const loggedIn = localStorage.getItem("loggedUser");
+
+        console.log(loggedIn);
+
+        if (!loggedIn) {
+          authNav.innerHTML = `
+            <li
+              id="login-button"
+              class="font-bold text-md p-3 rounded-md hover:bg-white hover:text-black cursor-pointer transition-colors"
+            >
+              Iniciar Sesión
+            </li>
+            <li
+              class="font-bold text-md p-3 rounded-md hover:bg-white hover:text-black cursor-pointer transition-colors"
+            >
+              Registrarme
+            </li>
+          `;
+
+          document
+            .getElementById("login-button")
+            .addEventListener("click", () => {
+              showLoginModal();
+            });
+        } else {
+          authNav.innerHTML = `
+            <li
+              class="font-bold text-md p-3 rounded-md"
+            >
+              Bienvenido, ${localStorage.getItem("loggedUser")}
+            </li>
+            <li
+              class="font-bold text-md p-3 rounded-md hover:bg-white hover:text-black cursor-pointer transition-colors"
+            >
+              Cerrar Sesión
+            </li>
+          `;
+
+          document.addEventListener("click", () => {
+            handleLogout();
+          });
+        }
+      };
+
       const handleRemoveFavorite = (coffee) => {
         let favoritesArray =
           JSON.parse(localStorage.getItem("favorites")) || [];
@@ -119,6 +154,12 @@
       };
 
       const addToFavorites = (coffee) => {
+        const loggedIn = localStorage.getItem("loggedUser");
+        if (!loggedIn) {
+          alert("Por favor, inicie sesión primero");
+          return;
+        }
+
         const favoritesArray =
           JSON.parse(localStorage.getItem("favorites")) || [];
 
@@ -142,6 +183,8 @@
           favoritesFragment.appendChild(newCard);
         });
         favoritesContainer.appendChild(favoritesFragment);
+
+        alert(`${coffee.titulo} ha sido agregado a tus favoritos.`);
       };
 
       const cerrarModal = () => {
@@ -149,6 +192,11 @@
           document.getElementById("login-modal-overlay"),
         );
         document.body.removeChild(document.getElementById("login-modal"));
+      };
+
+      const handleLogout = () => {
+        localStorage.removeItem("loggedUser");
+        window.location.reload();
       };
 
       const handleLogin = () => {
@@ -164,7 +212,7 @@
         if (foundUser) {
           localStorage.setItem("loggedUser", foundUser.username);
           alert("Inicio de sesión exitoso");
-          cerrarModal();
+          window.location.reload();
         } else {
           alert("Credenciales incorrectas, inténtelo nuevamente");
         }
@@ -251,7 +299,6 @@
         const favoriteButton = card.querySelector("#favorite-button");
         favoriteButton.addEventListener("click", () => {
           addToFavorites(coffee);
-          alert(`${coffee.titulo} ha sido agregado a tus favoritos.`);
         });
 
         return card;
@@ -289,11 +336,7 @@
 
       productsContainer.appendChild(productsFragment);
 
-      //////////////// Event Listeners
-
-      document.getElementById("login-button").addEventListener("click", () => {
-        showLoginModal();
-      });
+      renderAuthNav();
     </script>
   </body>
 </html>
