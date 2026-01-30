@@ -112,77 +112,113 @@
         } else {
           authNav.innerHTML = `
             <li
+              
               class="font-bold text-md p-3 rounded-md"
             >
               Bienvenido, ${localStorage.getItem("loggedUser")}
             </li>
             <li
+            id="logout-button"
               class="font-bold text-md p-3 rounded-md hover:bg-white hover:text-black cursor-pointer transition-colors"
             >
               Cerrar Sesión
             </li>
           `;
 
-          document.addEventListener("click", () => {
-            handleLogout();
+          document
+            .getElementById("logout-button")
+            .addEventListener("click", () => {
+              handleLogout();
+            });
+        }
+      };
+
+      const loadFavorites = () => {
+        const favoritesContainer = document.getElementById("favorites-list");
+        favoritesContainer.innerHTML = "";
+        const favoritesFragment = document.createDocumentFragment();
+
+        const loggedUser = localStorage.getItem("loggedUser");
+
+        if (!loggedUser) {
+          favoritesContainer.innerHTML = `<p class="font-light text-md">Inicia Sesión antes para poder ver tus favoritos :)</p>`;
+          return;
+        }
+
+        const userFavorites =
+          JSON.parse(localStorage.getItem("userFavorites")) || {};
+
+        const currentFavorites = userFavorites[loggedUser];
+
+        console.log("current favorites ", currentFavorites);
+
+        if (currentFavorites.length > 0) {
+          currentFavorites.forEach((coffee) => {
+            const newCard = createFavoriteCard(coffee);
+            favoritesFragment.appendChild(newCard);
           });
+
+          favoritesContainer.appendChild(favoritesFragment);
+        } else {
+          favoritesContainer.innerHTML = `<p class="font-light text-md">Sin productos favoritos aún. Agrega algunos desde la sección de productos.</p>`;
         }
       };
 
       const handleRemoveFavorite = (coffee) => {
-        let favoritesArray =
-          JSON.parse(localStorage.getItem("favorites")) || [];
+        const loggedUser = localStorage.getItem("loggedUser");
+        if (!loggedUser) {
+          return;
+        }
 
-        favoritesArray = favoritesArray.filter(
+        const userFavorites =
+          JSON.parse(localStorage.getItem("userFavorites")) || {};
+
+        // Verificar si el usuario tiene favoritos
+        if (!userFavorites[loggedUser]) {
+          return;
+        }
+
+        // Filtrar Y REASIGNAR al objeto userFavorites
+        userFavorites[loggedUser] = userFavorites[loggedUser].filter(
           (element) => element.id !== coffee.id,
         );
 
-        localStorage.setItem("favorites", JSON.stringify(favoritesArray));
+        // Ahora sí guardar el objeto actualizado
+        localStorage.setItem("userFavorites", JSON.stringify(userFavorites));
 
-        // Remover del DOM
-        const favoritesContainer = document.getElementById("favorites-list");
-        favoritesContainer.innerHTML = "";
-
-        const favoritesFragment = document.createDocumentFragment();
-
-        favoritesArray.forEach((coffee) => {
-          const newCard = createFavoriteCard(coffee);
-          favoritesFragment.appendChild(newCard);
-        });
-
-        favoritesContainer.appendChild(favoritesFragment);
+        // Recargar favoritos
+        loadFavorites();
       };
 
       const addToFavorites = (coffee) => {
-        const loggedIn = localStorage.getItem("loggedUser");
-        if (!loggedIn) {
+        const loggedUser = localStorage.getItem("loggedUser");
+        if (!loggedUser) {
           alert("Por favor, inicie sesión primero");
           return;
         }
 
-        const favoritesArray =
-          JSON.parse(localStorage.getItem("favorites")) || [];
+        const userFavorites =
+          JSON.parse(localStorage.getItem("userFavorites")) || {};
+        const currentFavorites = userFavorites[loggedUser];
 
-        const elementExists = favoritesArray.some(
-          (element) => element.id === coffee.id,
-        );
-
-        if (!elementExists) {
-          favoritesArray.push(coffee);
-          localStorage.setItem("favorites", JSON.stringify(favoritesArray));
+        if (!currentFavorites) {
+          userFavorites[loggedUser] = [coffee];
+        } else {
+          const elementExists = userFavorites[loggedUser].some(
+            (element) => element.id === coffee.id,
+          );
+          if (elementExists) {
+            alert(`${coffee.titulo} ya está en tus favoritos`);
+            return;
+          }
+          userFavorites[loggedUser].push(coffee);
         }
 
+        //localstorage save
+        localStorage.setItem("userFavorites", JSON.stringify(userFavorites));
+
         // Agregar al DOM
-        const favoritesContainer = document.getElementById("favorites-list");
-        favoritesContainer.innerHTML = "";
-
-        const favoritesFragment = document.createDocumentFragment();
-
-        favoritesArray.forEach((coffee) => {
-          const newCard = createFavoriteCard(coffee);
-          favoritesFragment.appendChild(newCard);
-        });
-        favoritesContainer.appendChild(favoritesFragment);
+        loadFavorites();
 
         alert(`${coffee.titulo} ha sido agregado a tus favoritos.`);
       };
@@ -308,21 +344,7 @@
 
       //////////////// Productos favoritos
 
-      const favoritesContainer = document.getElementById("favorites-list");
-      const favoritesFragment = document.createDocumentFragment();
-
-      const favoritesList = JSON.parse(localStorage.getItem("favorites")) || [];
-
-      if (favoritesList.length > 0) {
-        favoritesList.forEach((coffee) => {
-          const newCard = createFavoriteCard(coffee);
-          favoritesFragment.appendChild(newCard);
-        });
-
-        favoritesContainer.appendChild(favoritesFragment);
-      } else {
-        favoritesContainer.innerHTML = `<p class="font-light text-md">No tienes productos favoritos aún. Agrega algunos desde la sección de productos.</p>`;
-      }
+      loadFavorites();
 
       //////////////// Nuestros productos
 
