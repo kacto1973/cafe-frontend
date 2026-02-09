@@ -92,18 +92,18 @@
 
         if (!loggedIn) {
           authNav.innerHTML = `
-                  <li
-                    id="login-button"
-                    class="font-bold text-md p-3 rounded-md hover:bg-white hover:text-black cursor-pointer transition-colors"
-                  >
-                    Iniciar Sesión
-                  </li>
-                  <li
-                    class="font-bold text-md p-3 rounded-md hover:bg-white hover:text-black cursor-pointer transition-colors"
-                  >
-                    Registrarme
-                  </li>
-                `;
+                    <li
+                      id="login-button"
+                      class="font-bold text-md p-3 rounded-md hover:bg-white hover:text-black cursor-pointer transition-colors"
+                    >
+                      Iniciar Sesión
+                    </li>
+                    <li
+                      class="font-bold text-md p-3 rounded-md hover:bg-white hover:text-black cursor-pointer transition-colors"
+                    >
+                      Registrarme
+                    </li>
+                  `;
 
           document
             .getElementById("login-button")
@@ -112,19 +112,19 @@
             });
         } else {
           authNav.innerHTML = `
-                  <li
+                    <li
 
-                    class="font-bold text-md p-3 rounded-md"
-                  >
-                    Bienvenido, ${localStorage.getItem("loggedUser")}
-                  </li>
-                  <li
-                  id="logout-button"
-                    class="font-bold text-md p-3 rounded-md hover:bg-white hover:text-black cursor-pointer transition-colors"
-                  >
-                    Cerrar Sesión
-                  </li>
-                `;
+                      class="font-bold text-md p-3 rounded-md"
+                    >
+                      Bienvenido, ${localStorage.getItem("loggedUser")}
+                    </li>
+                    <li
+                    id="logout-button"
+                      class="font-bold text-md p-3 rounded-md hover:bg-white hover:text-black cursor-pointer transition-colors"
+                    >
+                      Cerrar Sesión
+                    </li>
+                  `;
 
           document
             .getElementById("logout-button")
@@ -135,6 +135,9 @@
       };
 
       const loadProducts = () => {
+        const inputText = document.getElementById("search-products").value;
+        console.log("desde load prod: ", inputText);
+
         const productsContainer = document.getElementById("products-list");
 
         // LIMPIAR contenedor antes de agregar nuevos productos
@@ -144,7 +147,29 @@
 
         // Si no hay usuario logueado, mostrar todos los productos
         if (!localStorage.getItem("loggedUser")) {
-          cafes.forEach((coffee) => {
+          const filteredCafes = cafes.filter((coffee) =>
+            coffee.titulo.toLowerCase().includes(inputText.toLowerCase()),
+          );
+
+          const selectValue = document.getElementById("sort-select").value;
+
+          let sortedCafes = filteredCafes;
+
+          switch (selectValue) {
+            case "default":
+              break;
+            case "price-asc":
+              sortedCafes = sortedCafes.sort((a, b) => a.precio - b.precio);
+              break;
+            case "price-desc":
+              sortedCafes = sortedCafes.sort((a, b) => b.precio - a.precio);
+
+              break;
+            case "popularity-desc":
+              break;
+          }
+
+          sortedCafes.forEach((coffee) => {
             const newCard = createProductCard(coffee);
             productsFragment.appendChild(newCard);
           });
@@ -176,16 +201,38 @@
         // Mostrar mensaje si no hay productos
         if (cafesNoFavoritos.length === 0) {
           productsContainer.innerHTML = `
-      <div class="col-span-3 text-center py-10">
-        <p class="text-lg font-semibold">¡Todos los cafés están en tus favoritos!</p>
-        <p class="text-gray-600">Prueba remover algunos de favoritos para verlos aquí.</p>
-      </div>
-    `;
+        <div class="col-span-3 text-center py-10">
+          <p class="text-lg font-semibold">¡Todos los cafés están en tus favoritos!</p>
+          <p class="text-gray-600">Prueba remover algunos de favoritos para verlos aquí.</p>
+        </div>
+      `;
           return;
         }
 
+        const filteredCafes = cafesNoFavoritos.filter((coffee) =>
+          coffee.titulo.toLowerCase().includes(inputText.toLowerCase()),
+        );
+
+        const selectValue = document.getElementById("sort-select").value;
+
+        let sortedCafes = filteredCafes;
+
+        switch (selectValue) {
+          case "default":
+            break;
+          case "price-asc":
+            sortedCafes = sortedCafes.sort((a, b) => a.precio - b.precio);
+            break;
+          case "price-desc":
+            sortedCafes = sortedCafes.sort((a, b) => b.precio - a.precio);
+
+            break;
+          case "popularity-desc":
+            break;
+        }
+
         // Crear cards para cada café no favorito
-        cafesNoFavoritos.forEach((coffee) => {
+        sortedCafes.forEach((coffee) => {
           const newCard = createProductCard(coffee);
           productsFragment.appendChild(newCard);
         });
@@ -205,8 +252,8 @@
 
         if (!loggedUser) {
           favoritesContainer.innerHTML = `
-      <p class="font-light text-md p-4">Inicia Sesión antes para poder ver tus favoritos :)</p>
-    `;
+        <p class="font-light text-md p-4">Inicia Sesión antes para poder ver tus favoritos :)</p>
+      `;
           return;
         }
 
@@ -224,8 +271,8 @@
           favoritesContainer.appendChild(favoritesFragment);
         } else {
           favoritesContainer.innerHTML = `
-      <p class="font-light text-md p-4">Sin productos favoritos aún. Agrega algunos desde la sección de productos.</p>
-    `;
+        <p class="font-light text-md p-4">Sin productos favoritos aún. Agrega algunos desde la sección de productos.</p>
+      `;
         }
       };
 
@@ -339,12 +386,12 @@
         modal.id = "login-modal";
 
         let contenidoHTML = `
-                <h3 class="text-black font-bold text-lg">Iniciar Sesión</h3>
-                <span class="absolute top-5 right-5 cursor-pointer font-bold text-lg" id="close-modal">&times;</span>
-                <input id="username" class="w-full p-2 border-1 border-gray-400 rounded-md" type="text" placeholder="Usuario" />
-                <input id="password" class="w-full p-2 border-1 border-gray-400 rounded-md" type="password" placeholder="Contraseña" />
-                <button id="login-submit" class="w-full bg-black text-white p-2 rounded-md hover:bg-gray-800 transition-colors duration-300">Ingresar</button>
-              `;
+                  <h3 class="text-black font-bold text-lg">Iniciar Sesión</h3>
+                  <span class="absolute top-5 right-5 cursor-pointer font-bold text-lg" id="close-modal">&times;</span>
+                  <input id="username" class="w-full p-2 border-1 border-gray-400 rounded-md" type="text" placeholder="Usuario" />
+                  <input id="password" class="w-full p-2 border-1 border-gray-400 rounded-md" type="password" placeholder="Contraseña" />
+                  <button id="login-submit" class="w-full bg-black text-white p-2 rounded-md hover:bg-gray-800 transition-colors duration-300">Ingresar</button>
+                `;
 
         modal.innerHTML = contenidoHTML;
 
@@ -367,17 +414,17 @@
         card.className =
           "flex flex-col gap-2 rounded-md min-w-[400px] max-w-[400px] overflow-hidden border-1 border-gray-400 transition-transform duration-300 hover:translate-y-[-5px] ";
         card.innerHTML = `
-                <img class="w-full h-[200px] object-cover transition-transform hover:scale-105 duration-500" src="${coffee.imagen}" alt="${coffee.titulo}" />
+                  <img class="w-full h-[200px] object-cover transition-transform hover:scale-105 duration-500" src="${coffee.imagen}" alt="${coffee.titulo}" />
 
-                <div class="flex flex-col p-5 gap-3">
-                  <h3 class="font-bold text-xl">${coffee.titulo} - <span class="text-green-500">$${coffee.precio}</span></h3>
-                  <p class="text-md">${coffee.descripcion}</p>
-                  <div class="flex flex-row pt-4">
-                    <button id="remove-favorite-button" class="bg-red-400 text-white p-2 rounded-md hover:bg-red-500 transition-colors duration-300 mr-2 cursor-pointer">Remover</button>
-                    <button class="ml-2 bg-green-600 text-white p-2 rounded-md hover:bg-green-700 transition-colors duration-300 cursor-pointer">Ordenar</button>
+                  <div class="flex flex-col p-5 gap-3">
+                    <h3 class="font-bold text-xl">${coffee.titulo} - <span class="text-green-500">$${coffee.precio}</span></h3>
+                    <p class="text-md">${coffee.descripcion}</p>
+                    <div class="flex flex-row pt-4">
+                      <button id="remove-favorite-button" class="bg-red-400 text-white p-2 rounded-md hover:bg-red-500 transition-colors duration-300 mr-2 cursor-pointer">Remover</button>
+                      <button class="ml-2 bg-green-600 text-white p-2 rounded-md hover:bg-green-700 transition-colors duration-300 cursor-pointer">Ordenar</button>
+                    </div>
                   </div>
-                </div>
-             `;
+               `;
 
         const removeButton = card.querySelector("#remove-favorite-button");
         removeButton.addEventListener("click", () => {
@@ -392,18 +439,18 @@
         card.className =
           "flex flex-col rounded-md min-w-[400px] overflow-hidden border-1 border-gray-400 transition-transform duration-300 hover:translate-y-[-5px] ";
         card.innerHTML = `
-                <img class="w-full h-[200px] object-cover transition-transform hover:scale-105 duration-500" src="${coffee.imagen}" alt="${coffee.titulo}" />
+                  <img class="w-full h-[200px] object-cover transition-transform hover:scale-105 duration-500" src="${coffee.imagen}" alt="${coffee.titulo}" />
 
-                <div class="relative flex flex-col p-5 gap-3">
-                  <h3 class="font-bold text-xl">${coffee.titulo} - <span class="text-green-500">$${coffee.precio}</span></h3>
-                  <p class="text-md">${coffee.descripcion}</p>
-                  <div class="flex flex-row pt-4">
-                    <button id="favorite-button" class="bg-yellow-400 text-white p-2 rounded-md hover:bg-yellow-500 transition-colors duration-300 mr-2 cursor-pointer">Favorito</button>
-                    <button class="ml-2 bg-green-600 text-white p-2 rounded-md hover:bg-green-700 transition-colors duration-300 cursor-pointer">Ordenar</button>
+                  <div class="relative flex flex-col p-5 gap-3">
+                    <h3 class="font-bold text-xl">${coffee.titulo} - <span class="text-green-500">$${coffee.precio}</span></h3>
+                    <p class="text-md">${coffee.descripcion}</p>
+                    <div class="flex flex-row pt-4">
+                      <button id="favorite-button" class="bg-yellow-400 text-white p-2 rounded-md hover:bg-yellow-500 transition-colors duration-300 mr-2 cursor-pointer">Favorito</button>
+                      <button class="ml-2 bg-green-600 text-white p-2 rounded-md hover:bg-green-700 transition-colors duration-300 cursor-pointer">Ordenar</button>
+                    </div>
+                    <span class="font-bold absolute right-5 bottom-5 px-4 py-2 border border-2 border-gray-300 rounded-full">⭐ ${coffee.popularidad}</span>
                   </div>
-                  <span class="font-bold absolute right-5 bottom-5 px-4 py-2 border border-2 border-gray-300 rounded-full">⭐ ${coffee.popularidad}</span>
-                </div>
-             `;
+               `;
 
         const favoriteButton = card.querySelector("#favorite-button");
         favoriteButton.addEventListener("click", () => {
@@ -425,12 +472,13 @@
 
       renderAuthNav();
 
-      // DEBUG: Mostrar estado actual de favoritos
-      console.log("Usuario logueado:", localStorage.getItem("loggedUser"));
-      console.log(
-        "Todos los favoritos:",
-        JSON.parse(localStorage.getItem("userFavorites")),
-      );
+      document
+        .getElementById("search-products")
+        .addEventListener("input", loadProducts);
+
+      document
+        .getElementById("sort-select")
+        .addEventListener("change", loadProducts);
     </script>
   </body>
 </html>
