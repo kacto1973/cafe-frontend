@@ -8,6 +8,7 @@
     <link href="/src/style.css" rel="stylesheet" />
     <link
       rel="stylesheet"
+      type="text/css"
       href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css"
     />
   </head>
@@ -26,38 +27,32 @@
       INSTRUCCIONES:
 
       Tienda de café front terminar:
-      -meterle cuentas
-      -popularidad
-      -agregar al carrito
-      -toasts
       -responsividad
-
-      ***Mandar msd tardar mañana 9:30 am repo y lo que hayamos avanzado
 
       -->
     <header
-      class="bg-black text-white flex flex-row p-5 items-center justify-between"
+      class="sticky top-0 left-0 right-0 z-50 bg-black text-white flex flex-row p-5 items-center justify-between"
     >
-      <h1 class="font-bold text-2xl cursor-pointer p-2">
-        Tienda de Café "Las 3 Torres"
-      </h1>
-      <nav>
+      <h1 class="font-bold text-2xl cursor-pointer p-2">Las 3 Torres</h1>
+      <nav class="">
         <ul class="flex flex-row gap-5" id="auth-nav"></ul>
       </nav>
     </header>
 
     <main class="px-10 relative">
       <section class="p-10 flex flex-col gap-5">
-        <article class="flex flex-row items-center mb-5">
+        <article
+          class="flex flex-col items-start md:flex-row md:items-center mb-5"
+        >
           <h2 class="font-bold text-2xl">Nuestros Productos</h2>
           <input
             id="search-products"
             type="text"
             placeholder="Buscar productos..."
-            class="p-2 border border-gray-400 rounded-md w-[500px] ml-10"
+            class="p-2 border border-gray-400 rounded-md w-full mt-2 md:mt-0 md:w-[500px] md:ml-10"
           />
           <select
-            class="p-2 border border-gray-400 rounded-md ml-10"
+            class="p-2 border border-gray-400 rounded-md md:ml-10 md:mt-0 mt-4"
             id="sort-select"
           >
             <option value="default">Ordenar por</option>
@@ -66,7 +61,7 @@
             <option value="popularity-desc">Popularidad</option>
           </select>
           <button
-            class="ml-6 bg-cyan-500 text-white font-bold rounded-md px-4 py-2 transition-colors duration-300 hover:bg-cyan-400"
+            class="md:ml-6 md:mt-0 mt-4 bg-cyan-500 text-white font-bold rounded-md px-4 py-2 transition-colors duration-300 hover:bg-cyan-400"
             id="favorites-button"
           >
             Mis Favoritos
@@ -117,18 +112,18 @@
 
         if (!loggedIn) {
           authNav.innerHTML = `
-                      <li
-                        id="login-button"
-                        class="font-bold text-md p-3 rounded-md hover:bg-white hover:text-black cursor-pointer transition-colors"
-                      >
-                        Iniciar Sesión
-                      </li>
-                      <li
-                        class="font-bold text-md p-3 rounded-md hover:bg-white hover:text-black cursor-pointer transition-colors"
-                      >
-                        Registrarme
-                      </li>
-                    `;
+                          <li
+                            id="login-button"
+                            class="font-bold text-md p-3 rounded-md hover:bg-white hover:text-black cursor-pointer transition-colors"
+                          >
+                            Iniciar Sesión
+                          </li>
+                          <li
+                            class="font-bold text-md p-3 rounded-md hover:bg-white hover:text-black cursor-pointer transition-colors"
+                          >
+                            Registrarme
+                          </li>
+                        `;
 
           document
             .getElementById("login-button")
@@ -137,26 +132,26 @@
             });
         } else {
           authNav.innerHTML = `
-          
-                      <li
 
-                        class="font-bold text-md p-3 rounded-md"
-                      >
-                        Bienvenido, ${localStorage.getItem("loggedUser")}
-                      </li>
-                      <li
-                        id="cart-button"
-                        class="font-bold text-md p-3 rounded-md hover:bg-white hover:text-black cursor-pointer transition-colors"
-                      >
-                        Carrito 🛒 
-                      </li>   
-                      <li
-                      id="logout-button"
-                        class="font-bold text-md p-3 rounded-md hover:bg-white hover:text-black cursor-pointer transition-colors"
-                      >
-                        Cerrar Sesión
-                      </li>
-                    `;
+                          <li
+
+                            class="hidden md:block font-bold text-md p-3 rounded-md"
+                          >
+                            Bienvenido, ${localStorage.getItem("loggedUser")}
+                          </li>
+                          <li
+                            id="cart-button"
+                            class="font-bold text-md p-3 rounded-md hover:bg-white hover:text-black cursor-pointer transition-colors"
+                          >
+                            Carrito 🛒
+                          </li>
+                          <li
+                          id="logout-button"
+                            class="font-bold text-md p-3 rounded-md hover:bg-white hover:text-black cursor-pointer transition-colors"
+                          >
+                            Cerrar Sesión
+                          </li>
+                        `;
 
           document
             .getElementById("logout-button")
@@ -233,11 +228,11 @@
         // Mostrar mensaje si no hay productos
         if (cafesNoFavoritos.length === 0) {
           productsContainer.innerHTML = `
-          <div class="col-span-3 text-center py-10">
-            <p class="text-lg font-semibold">¡Todos los cafés están en tus favoritos!</p>
-            <p class="text-gray-600">Prueba remover algunos de favoritos para verlos aquí.</p>
-          </div>
-        `;
+              <div class="col-span-3 text-center py-10">
+                <p class="text-lg font-semibold">¡Todos los cafés están en tus favoritos!</p>
+                <p class="text-gray-600">Prueba remover algunos de favoritos para verlos aquí.</p>
+              </div>
+            `;
           return;
         }
 
@@ -300,7 +295,15 @@
       const addToFavorites = (coffee) => {
         const loggedUser = localStorage.getItem("loggedUser");
         if (!loggedUser) {
-          alert("Por favor, inicie sesión para agregar a favoritos XD");
+          Toastify({
+            text: "¡Añadido a favoritos! ☕",
+            duration: 3000,
+            gravity: "bottom",
+            position: "right",
+            style: {
+              background: "#6F4E37",
+            },
+          }).showToast();
           return;
         }
 
@@ -318,7 +321,16 @@
         );
 
         if (elementExists) {
-          alert(`${coffee.titulo} ya está en tus favoritos`);
+          Toastify({
+            text: `${coffee.titulo} ya está en tus favoritos`,
+            duration: 3000,
+            gravity: "bottom",
+            position: "right",
+            style: {
+              background: "#6F4E37",
+            },
+          }).showToast();
+
           return;
         }
 
@@ -333,7 +345,15 @@
         // Recargar ambas secciones
         loadProducts();
 
-        alert(`${coffee.titulo} ha sido agregado a tus favoritos.`);
+        Toastify({
+          text: `${coffee.titulo} ha sido agregado a tus favoritos ☕`,
+          duration: 3000,
+          gravity: "bottom",
+          position: "right",
+          style: {
+            background: "#6F4E37",
+          },
+        }).showToast();
       };
 
       const cerrarModal = () => {
@@ -360,10 +380,26 @@
 
         if (foundUser) {
           localStorage.setItem("loggedUser", foundUser.username);
-          alert("Inicio de sesión exitoso");
+          Toastify({
+            text: "Inicio de sesión exitoso 🎉",
+            duration: 3000,
+            gravity: "bottom",
+            position: "right",
+            style: {
+              background: "#6F4E37",
+            },
+          }).showToast();
           window.location.reload();
         } else {
-          alert("Credenciales incorrectas, inténtelo nuevamente");
+          Toastify({
+            text: "Credenciales incorrectas, inténtelo nuevamente",
+            duration: 3000,
+            gravity: "bottom",
+            position: "right",
+            style: {
+              background: "#6F4E37",
+            },
+          }).showToast();
         }
       };
 
@@ -379,12 +415,12 @@
         modal.id = "login-modal";
 
         let contenidoHTML = `
-                    <h3 class="text-black font-bold text-lg">Iniciar Sesión</h3>
-                    <span class="absolute top-5 right-5 cursor-pointer font-bold text-lg" id="close-modal">&times;</span>
-                    <input id="username" class="w-full p-2 border-1 border-gray-400 rounded-md" type="text" placeholder="Usuario" />
-                    <input id="password" class="w-full p-2 border-1 border-gray-400 rounded-md" type="password" placeholder="Contraseña" />
-                    <button id="login-submit" class="w-full bg-black text-white p-2 rounded-md hover:bg-gray-800 transition-colors duration-300">Ingresar</button>
-                  `;
+                        <h3 class="text-black font-bold text-lg">Iniciar Sesión</h3>
+                        <span class="absolute top-5 right-5 cursor-pointer font-bold text-lg" id="close-modal">&times;</span>
+                        <input id="username" class="w-full p-2 border-1 border-gray-400 rounded-md" type="text" placeholder="Usuario" />
+                        <input id="password" class="w-full p-2 border-1 border-gray-400 rounded-md" type="password" placeholder="Contraseña" />
+                        <button id="login-submit" class="w-full bg-black text-white p-2 rounded-md hover:bg-gray-800 transition-colors duration-300">Ingresar</button>
+                      `;
 
         modal.innerHTML = contenidoHTML;
 
@@ -406,12 +442,12 @@
         const loggedUser = localStorage.getItem("loggedUser");
         if (!loggedUser) {
           Toastify({
-            text: "⚠️ Por favor, inicie sesión primero",
+            text: "Por favor, inicie sesión primero",
             duration: 3000,
-            gravity: "top",
+            gravity: "bottom",
             position: "right",
             style: {
-              background: "linear-gradient(to right, #ff5f6d, #ffc371)",
+              background: "#6F4E37",
             },
           }).showToast();
           return;
@@ -428,11 +464,11 @@
           userFavorites[loggedUser].length === 0
         ) {
           favoritesContainer.innerHTML = `
-              <div class="col-span-3 text-center py-10">
-                <p class="text-lg font-semibold">¡No tienes cafés favoritos aún!</p>
-                <p class="text-gray-600">Explora nuestros productos y agrégalos a tus favoritos.</p>
-              </div>
-            `;
+                  <div class="col-span-3 text-center py-10">
+                    <p class="text-lg font-semibold">¡No tienes cafés favoritos aún!</p>
+                    <p class="text-gray-600">Explora nuestros productos y agrégalos a tus favoritos.</p>
+                  </div>
+                `;
           return;
         }
 
@@ -451,21 +487,21 @@
         card.className =
           "relative flex flex-col mt-4 rounded-md min-w-[300px] overflow-hidden border-1 border-gray-400 transition-transform duration-300 hover:translate-y-[-5px] ";
         card.innerHTML = `
-    <img class="w-full h-[200px] object-cover transition-transform hover:scale-105 duration-500" src="${coffee.imagen}" alt="${coffee.titulo}" />
-    
-    <!-- Corazón como botón de remover (reemplaza al botón rosa) -->
-    <img id="remove-favorite-button" class="absolute right-4 top-4 bg-white p-1 rounded-full cursor-pointer transition-transform duration-300 hover:translate-y-[-3px] hover:bg-red-100" width="30" src="assets/heart-svgrepo-com.svg" alt="Remover de favoritos">
+        <img class="w-full h-[200px] object-cover transition-transform hover:scale-105 duration-500" src="${coffee.imagen}" alt="${coffee.titulo}" />
 
-    <div class="relative flex flex-col p-5 gap-3">
-      <span class="absolute right-4 top-4 text-amber-700 font-bold">$${coffee.precio}</span>
-      <h3 class="font-bold text-xl">${coffee.titulo}</h3>
-      <p class="text-gray-500">${coffee.descripcion}</p>
-      <span class="text-yellow-400 absolute right-4 top-12">⭐ ${coffee.popularidad}</span>
-      
-      <!-- Botón de ordenar a todo lo ancho -->
-      <button class="w-full mt-2 bg-black text-white p-2 rounded-md hover:bg-gray-800 transition-colors duration-300 cursor-pointer">Agregar al Carrito</button>
-    </div>
-  `;
+        <!-- Corazón como botón de remover (reemplaza al botón rosa) -->
+        <img id="remove-favorite-button" class="absolute right-4 top-4 bg-white p-1 rounded-full cursor-pointer transition-transform duration-300 hover:translate-y-[-3px] hover:bg-red-100" width="30" src="assets/heart-svgrepo-com.svg" alt="Remover de favoritos">
+
+        <div class="relative flex flex-col p-5 gap-3">
+          <span class="absolute right-4 top-4 text-amber-700 font-bold">$${coffee.precio}</span>
+          <h3 class="font-bold text-xl">${coffee.titulo}</h3>
+          <p class="text-gray-500">${coffee.descripcion}</p>
+          <span class="text-yellow-400 absolute right-4 top-12">⭐ ${coffee.popularidad}</span>
+
+          <!-- Botón de ordenar a todo lo ancho -->
+          <button class="w-full mt-2 bg-black text-white p-2 rounded-md hover:bg-gray-800 transition-colors duration-300 cursor-pointer">Agregar al Carrito</button>
+        </div>
+      `;
 
         const removeButton = card.querySelector("#remove-favorite-button");
         removeButton.addEventListener("click", () => {
@@ -481,20 +517,33 @@
         card.className =
           "relative flex flex-col mt-4 rounded-md w-[300px] overflow-hidden border-1 border-gray-400 transition-transform duration-300 hover:translate-y-[-5px] ";
         card.innerHTML = `
-                    <img class="w-full h-[200px] object-cover transition-transform hover:scale-105 duration-500" src="${coffee.imagen}" alt="${coffee.titulo}" />
-                    <img id="favorite-button" class="absolute right-4 top-4 bg-white p-1 rounded-full cursor-pointer transition-transform duration-300 hover:translate-y-[-3px] " width="30" src="assets/heart-svgrepo-com.svg" alt="Favorito">
+                        <img class="w-full h-[200px] object-cover transition-transform hover:scale-105 duration-500" src="${coffee.imagen}" alt="${coffee.titulo}" />
+                        <img id="favorite-button" class="absolute right-4 top-4 bg-white p-1 rounded-full cursor-pointer transition-transform duration-300 hover:translate-y-[-3px] " width="30" src="assets/heart-svgrepo-com.svg" alt="Favorito">
 
-                    <div class="relative flex flex-col p-5 gap-3">
-                      <span class="absolute right-4 top-4 text-amber-700 font-bold">$${coffee.precio}</span>
-                      <h3 class="font-bold text-xl">${coffee.titulo}</h3>
-                      <p class="text-gray-500">${coffee.descripcion}</p>
-                        <button class="mt-2 bg-black text-white p-2 rounded-md hover:bg-gray-800 transition-colors duration-300 cursor-pointer">Agregar al Carrito</button>
-                      <span class="text-yellow-400 absolute right-4 top-12">⭐ ${coffee.popularidad}</span>
-                    </div>
-                `;
+                        <div class="relative flex flex-col p-5 gap-3">
+                          <span class="absolute right-4 top-4 text-amber-700 font-bold">$${coffee.precio}</span>
+                          <h3 class="font-bold text-xl">${coffee.titulo}</h3>
+                          <p class="text-gray-500">${coffee.descripcion}</p>
+                            <button class="mt-2 bg-black text-white p-2 rounded-md hover:bg-gray-800 transition-colors duration-300 cursor-pointer">Agregar al Carrito</button>
+                          <span class="text-yellow-400 absolute right-4 top-12">⭐ ${coffee.popularidad}</span>
+                        </div>
+                    `;
 
         const favoriteButton = card.querySelector("#favorite-button");
         favoriteButton.addEventListener("click", () => {
+          const loggedUser = localStorage.getItem("loggedUser");
+          if (!loggedUser) {
+            Toastify({
+              text: "Por favor, inicie sesión para añadir a favoritos! ☕",
+              duration: 3000,
+              gravity: "bottom",
+              position: "right",
+              style: {
+                background: "#6F4E37",
+              },
+            }).showToast();
+            return;
+          }
           addToFavorites(coffee);
         });
 
@@ -521,6 +570,20 @@
       document
         .getElementById("favorites-button")
         .addEventListener("click", () => {
+          const loggedUser = localStorage.getItem("loggedUser");
+          if (!loggedUser) {
+            Toastify({
+              text: "Por favor, inicie sesión primero",
+              duration: 3000,
+              gravity: "bottom",
+              position: "right",
+              style: {
+                background: "#6F4E37",
+              },
+            }).showToast();
+            return;
+          }
+
           const modalOverlay = document.querySelector(
             ".inset-0.fixed.bg-black\\/60.z-50.pointer-events-none",
           );
@@ -537,5 +600,9 @@
           modalOverlay.classList.add("pointer-events-none", "hidden");
         });
     </script>
+    <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/npm/toastify-js"
+    ></script>
   </body>
 </html>
