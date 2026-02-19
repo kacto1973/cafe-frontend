@@ -6,6 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>cafe-frontend</title>
     <link href="/src/style.css" rel="stylesheet" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css"
+    />
   </head>
   <body>
     <style>
@@ -18,19 +22,19 @@
       }
     </style>
     <!--
-    
-    INSTRUCCIONES:
+      
+      INSTRUCCIONES:
 
-    Tienda de café front terminar:
-    -meterle cuentas
-    -popularidad
-    -agregar al carrito
-    -toasts
-    -responsividad
+      Tienda de café front terminar:
+      -meterle cuentas
+      -popularidad
+      -agregar al carrito
+      -toasts
+      -responsividad
 
-    ***Mandar msd tardar mañana 9:30 am repo y lo que hayamos avanzado
+      ***Mandar msd tardar mañana 9:30 am repo y lo que hayamos avanzado
 
-    -->
+      -->
     <header
       class="bg-black text-white flex flex-row p-5 items-center justify-between"
     >
@@ -42,16 +46,9 @@
       </nav>
     </header>
 
-    <main class="px-10">
+    <main class="px-10 relative">
       <section class="p-10 flex flex-col gap-5">
-        <h2 class="font-bold text-2xl">Tus Productos Favoritos</h2>
-        <div
-          class="flex flex-row gap-10 overflow-x-auto overflow-y-hidden"
-          id="favorites-list"
-        ></div>
-      </section>
-      <section class="p-10 flex flex-col gap-5">
-        <div class="flex flex-row items-center mb-5">
+        <article class="flex flex-row items-center mb-5">
           <h2 class="font-bold text-2xl">Nuestros Productos</h2>
           <input
             id="search-products"
@@ -68,12 +65,34 @@
             <option value="price-desc">Precio: Mayor a Menor</option>
             <option value="popularity-desc">Popularidad</option>
           </select>
-        </div>
-        <div
-          class="flex flex-row flex-wrap gap-5 justify-between"
-          id="products-list"
-        ></div>
+          <button
+            class="ml-6 bg-cyan-500 text-white font-bold rounded-md px-4 py-2 transition-colors duration-300 hover:bg-cyan-400"
+            id="favorites-button"
+          >
+            Mis Favoritos
+          </button>
+        </article>
+        <div class="flex flex-row flex-wrap gap-5" id="products-list"></div>
       </section>
+      <div class="hidden inset-0 fixed bg-black/60 z-50 pointer-events-none">
+        <article
+          id="favorites-modal"
+          class="bg-white rounded-md p-8 w-[80%] md:w-[700px] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+        >
+          <div>
+            <h2 class="font-bold text-lg">Tus Productos Favoritos</h2>
+            <span
+              id="close-favorites-modal"
+              class="p-4 bg-white font-bold text-black cursor-pointer rounded-full absolute right-5 top-5"
+              >X</span
+            >
+          </div>
+          <div
+            id="favorites-list"
+            class="flex flex-row gap-5 mt-5 overflow-x-auto h-[80%]"
+          ></div>
+        </article>
+      </div>
     </main>
 
     <footer class="bg-black text-white p-10 flex flex-col">
@@ -98,18 +117,18 @@
 
         if (!loggedIn) {
           authNav.innerHTML = `
-                    <li
-                      id="login-button"
-                      class="font-bold text-md p-3 rounded-md hover:bg-white hover:text-black cursor-pointer transition-colors"
-                    >
-                      Iniciar Sesión
-                    </li>
-                    <li
-                      class="font-bold text-md p-3 rounded-md hover:bg-white hover:text-black cursor-pointer transition-colors"
-                    >
-                      Registrarme
-                    </li>
-                  `;
+                      <li
+                        id="login-button"
+                        class="font-bold text-md p-3 rounded-md hover:bg-white hover:text-black cursor-pointer transition-colors"
+                      >
+                        Iniciar Sesión
+                      </li>
+                      <li
+                        class="font-bold text-md p-3 rounded-md hover:bg-white hover:text-black cursor-pointer transition-colors"
+                      >
+                        Registrarme
+                      </li>
+                    `;
 
           document
             .getElementById("login-button")
@@ -118,19 +137,26 @@
             });
         } else {
           authNav.innerHTML = `
-                    <li
+          
+                      <li
 
-                      class="font-bold text-md p-3 rounded-md"
-                    >
-                      Bienvenido, ${localStorage.getItem("loggedUser")}
-                    </li>
-                    <li
-                    id="logout-button"
-                      class="font-bold text-md p-3 rounded-md hover:bg-white hover:text-black cursor-pointer transition-colors"
-                    >
-                      Cerrar Sesión
-                    </li>
-                  `;
+                        class="font-bold text-md p-3 rounded-md"
+                      >
+                        Bienvenido, ${localStorage.getItem("loggedUser")}
+                      </li>
+                      <li
+                        id="cart-button"
+                        class="font-bold text-md p-3 rounded-md hover:bg-white hover:text-black cursor-pointer transition-colors"
+                      >
+                        Carrito 🛒 
+                      </li>   
+                      <li
+                      id="logout-button"
+                        class="font-bold text-md p-3 rounded-md hover:bg-white hover:text-black cursor-pointer transition-colors"
+                      >
+                        Cerrar Sesión
+                      </li>
+                    `;
 
           document
             .getElementById("logout-button")
@@ -207,11 +233,11 @@
         // Mostrar mensaje si no hay productos
         if (cafesNoFavoritos.length === 0) {
           productsContainer.innerHTML = `
-        <div class="col-span-3 text-center py-10">
-          <p class="text-lg font-semibold">¡Todos los cafés están en tus favoritos!</p>
-          <p class="text-gray-600">Prueba remover algunos de favoritos para verlos aquí.</p>
-        </div>
-      `;
+          <div class="col-span-3 text-center py-10">
+            <p class="text-lg font-semibold">¡Todos los cafés están en tus favoritos!</p>
+            <p class="text-gray-600">Prueba remover algunos de favoritos para verlos aquí.</p>
+          </div>
+        `;
           return;
         }
 
@@ -246,42 +272,6 @@
         productsContainer.appendChild(productsFragment);
       };
 
-      const loadFavorites = () => {
-        const favoritesContainer = document.getElementById("favorites-list");
-
-        // LIMPIAR contenedor antes de agregar nuevos favoritos
-        favoritesContainer.innerHTML = "";
-
-        const favoritesFragment = document.createDocumentFragment();
-
-        const loggedUser = localStorage.getItem("loggedUser");
-
-        if (!loggedUser) {
-          favoritesContainer.innerHTML = `
-        <p class="font-light text-md p-4">Inicia Sesión antes para poder ver tus favoritos :)</p>
-      `;
-          return;
-        }
-
-        const userFavorites =
-          JSON.parse(localStorage.getItem("userFavorites")) || {};
-        const currentFavorites = userFavorites[loggedUser] || [];
-
-        console.log("current favorites desde loadFavs: ", currentFavorites);
-
-        if (currentFavorites.length > 0) {
-          currentFavorites.forEach((coffee) => {
-            const newCard = createFavoriteCard(coffee);
-            favoritesFragment.appendChild(newCard);
-          });
-          favoritesContainer.appendChild(favoritesFragment);
-        } else {
-          favoritesContainer.innerHTML = `
-        <p class="font-light text-md p-4">Sin productos favoritos aún. Agrega algunos desde la sección de productos.</p>
-      `;
-        }
-      };
-
       const handleRemoveFavorite = (coffee) => {
         const loggedUser = localStorage.getItem("loggedUser");
         if (!loggedUser) {
@@ -304,15 +294,13 @@
         // Ahora sí guardar el objeto actualizado
         localStorage.setItem("userFavorites", JSON.stringify(userFavorites));
 
-        // Recargar favoritos
-        loadFavorites();
         loadProducts();
       };
 
       const addToFavorites = (coffee) => {
         const loggedUser = localStorage.getItem("loggedUser");
         if (!loggedUser) {
-          alert("Por favor, inicie sesión primero");
+          alert("Por favor, inicie sesión para agregar a favoritos XD");
           return;
         }
 
@@ -343,7 +331,6 @@
         console.log("Favoritos actualizados:", userFavorites[loggedUser]);
 
         // Recargar ambas secciones
-        loadFavorites();
         loadProducts();
 
         alert(`${coffee.titulo} ha sido agregado a tus favoritos.`);
@@ -392,12 +379,12 @@
         modal.id = "login-modal";
 
         let contenidoHTML = `
-                  <h3 class="text-black font-bold text-lg">Iniciar Sesión</h3>
-                  <span class="absolute top-5 right-5 cursor-pointer font-bold text-lg" id="close-modal">&times;</span>
-                  <input id="username" class="w-full p-2 border-1 border-gray-400 rounded-md" type="text" placeholder="Usuario" />
-                  <input id="password" class="w-full p-2 border-1 border-gray-400 rounded-md" type="password" placeholder="Contraseña" />
-                  <button id="login-submit" class="w-full bg-black text-white p-2 rounded-md hover:bg-gray-800 transition-colors duration-300">Ingresar</button>
-                `;
+                    <h3 class="text-black font-bold text-lg">Iniciar Sesión</h3>
+                    <span class="absolute top-5 right-5 cursor-pointer font-bold text-lg" id="close-modal">&times;</span>
+                    <input id="username" class="w-full p-2 border-1 border-gray-400 rounded-md" type="text" placeholder="Usuario" />
+                    <input id="password" class="w-full p-2 border-1 border-gray-400 rounded-md" type="password" placeholder="Contraseña" />
+                    <button id="login-submit" class="w-full bg-black text-white p-2 rounded-md hover:bg-gray-800 transition-colors duration-300">Ingresar</button>
+                  `;
 
         modal.innerHTML = contenidoHTML;
 
@@ -415,30 +402,75 @@
         });
       };
 
+      const loadFavorites = () => {
+        const loggedUser = localStorage.getItem("loggedUser");
+        if (!loggedUser) {
+          Toastify({
+            text: "⚠️ Por favor, inicie sesión primero",
+            duration: 3000,
+            gravity: "top",
+            position: "right",
+            style: {
+              background: "linear-gradient(to right, #ff5f6d, #ffc371)",
+            },
+          }).showToast();
+          return;
+        }
+
+        const userFavorites =
+          JSON.parse(localStorage.getItem("userFavorites")) || {};
+
+        const favoritesContainer = document.getElementById("favorites-list");
+        favoritesContainer.innerHTML = "";
+
+        if (
+          !userFavorites[loggedUser] ||
+          userFavorites[loggedUser].length === 0
+        ) {
+          favoritesContainer.innerHTML = `
+              <div class="col-span-3 text-center py-10">
+                <p class="text-lg font-semibold">¡No tienes cafés favoritos aún!</p>
+                <p class="text-gray-600">Explora nuestros productos y agrégalos a tus favoritos.</p>
+              </div>
+            `;
+          return;
+        }
+
+        const favoritesFragment = document.createDocumentFragment();
+
+        userFavorites[loggedUser].forEach((coffee) => {
+          const favoriteCard = createFavoriteCard(coffee);
+          favoritesFragment.appendChild(favoriteCard);
+        });
+
+        favoritesContainer.appendChild(favoritesFragment);
+      };
+
       const createFavoriteCard = (coffee) => {
         const card = document.createElement("article");
         card.className =
-          "relative flex flex-col mt-4 rounded-md min-w-[400px] max-w-[400px] overflow-hidden border-1 border-gray-400 transition-transform duration-300 hover:translate-y-[-5px] ";
+          "relative flex flex-col mt-4 rounded-md min-w-[300px] overflow-hidden border-1 border-gray-400 transition-transform duration-300 hover:translate-y-[-5px] ";
         card.innerHTML = `
-  <img class="w-full h-[200px] object-cover transition-transform hover:scale-105 duration-500" src="${coffee.imagen}" alt="${coffee.titulo}" />
-  
-  <!-- Corazón como botón de remover (reemplaza al botón rosa) -->
-  <img id="remove-favorite-button" class="absolute right-4 top-4 bg-white p-1 rounded-full cursor-pointer transition-transform duration-300 hover:translate-y-[-3px] hover:bg-red-100" width="30" src="assets/heart-svgrepo-com.svg" alt="Remover de favoritos">
-
-  <div class="relative flex flex-col p-5 gap-3">
-    <span class="absolute right-4 top-4 text-amber-700 font-bold">$${coffee.precio}</span>
-    <h3 class="font-bold text-xl">${coffee.titulo}</h3>
-    <p class="text-gray-500">${coffee.descripcion}</p>
-    <span class="text-yellow-400 absolute right-4 top-12">⭐ ${coffee.popularidad}</span>
+    <img class="w-full h-[200px] object-cover transition-transform hover:scale-105 duration-500" src="${coffee.imagen}" alt="${coffee.titulo}" />
     
-    <!-- Botón de ordenar a todo lo ancho -->
-    <button class="w-full mt-2 bg-black text-white p-2 rounded-md hover:bg-gray-800 transition-colors duration-300 cursor-pointer">Ordenar Ahora</button>
-  </div>
-`;
+    <!-- Corazón como botón de remover (reemplaza al botón rosa) -->
+    <img id="remove-favorite-button" class="absolute right-4 top-4 bg-white p-1 rounded-full cursor-pointer transition-transform duration-300 hover:translate-y-[-3px] hover:bg-red-100" width="30" src="assets/heart-svgrepo-com.svg" alt="Remover de favoritos">
+
+    <div class="relative flex flex-col p-5 gap-3">
+      <span class="absolute right-4 top-4 text-amber-700 font-bold">$${coffee.precio}</span>
+      <h3 class="font-bold text-xl">${coffee.titulo}</h3>
+      <p class="text-gray-500">${coffee.descripcion}</p>
+      <span class="text-yellow-400 absolute right-4 top-12">⭐ ${coffee.popularidad}</span>
+      
+      <!-- Botón de ordenar a todo lo ancho -->
+      <button class="w-full mt-2 bg-black text-white p-2 rounded-md hover:bg-gray-800 transition-colors duration-300 cursor-pointer">Agregar al Carrito</button>
+    </div>
+  `;
 
         const removeButton = card.querySelector("#remove-favorite-button");
         removeButton.addEventListener("click", () => {
           handleRemoveFavorite(coffee);
+          loadFavorites();
         });
 
         return card;
@@ -449,17 +481,17 @@
         card.className =
           "relative flex flex-col mt-4 rounded-md w-[300px] overflow-hidden border-1 border-gray-400 transition-transform duration-300 hover:translate-y-[-5px] ";
         card.innerHTML = `
-                  <img class="w-full h-[200px] object-cover transition-transform hover:scale-105 duration-500" src="${coffee.imagen}" alt="${coffee.titulo}" />
-                  <img id="favorite-button" class="absolute right-4 top-4 bg-white p-1 rounded-full cursor-pointer transition-transform duration-300 hover:translate-y-[-3px] " width="30" src="assets/heart-svgrepo-com.svg" alt="Favorito">
+                    <img class="w-full h-[200px] object-cover transition-transform hover:scale-105 duration-500" src="${coffee.imagen}" alt="${coffee.titulo}" />
+                    <img id="favorite-button" class="absolute right-4 top-4 bg-white p-1 rounded-full cursor-pointer transition-transform duration-300 hover:translate-y-[-3px] " width="30" src="assets/heart-svgrepo-com.svg" alt="Favorito">
 
-                  <div class="relative flex flex-col p-5 gap-3">
-                    <span class="absolute right-4 top-4 text-amber-700 font-bold">$${coffee.precio}</span>
-                    <h3 class="font-bold text-xl">${coffee.titulo}</h3>
-                    <p class="text-gray-500">${coffee.descripcion}</p>
-                      <button class="mt-2 bg-black text-white p-2 rounded-md hover:bg-gray-800 transition-colors duration-300 cursor-pointer">Agregar al Carrito</button>
-                    <span class="text-yellow-400 absolute right-4 top-12">⭐ ${coffee.popularidad}</span>
-                  </div>
-               `;
+                    <div class="relative flex flex-col p-5 gap-3">
+                      <span class="absolute right-4 top-4 text-amber-700 font-bold">$${coffee.precio}</span>
+                      <h3 class="font-bold text-xl">${coffee.titulo}</h3>
+                      <p class="text-gray-500">${coffee.descripcion}</p>
+                        <button class="mt-2 bg-black text-white p-2 rounded-md hover:bg-gray-800 transition-colors duration-300 cursor-pointer">Agregar al Carrito</button>
+                      <span class="text-yellow-400 absolute right-4 top-12">⭐ ${coffee.popularidad}</span>
+                    </div>
+                `;
 
         const favoriteButton = card.querySelector("#favorite-button");
         favoriteButton.addEventListener("click", () => {
@@ -471,13 +503,10 @@
 
       // JS functions
 
-      //////////////// Productos favoritos
-
-      loadFavorites();
-
       //////////////// Cargar productos
 
       loadProducts();
+      loadFavorites();
 
       renderAuthNav();
 
@@ -488,6 +517,25 @@
       document
         .getElementById("sort-select")
         .addEventListener("change", loadProducts);
+
+      document
+        .getElementById("favorites-button")
+        .addEventListener("click", () => {
+          const modalOverlay = document.querySelector(
+            ".inset-0.fixed.bg-black\\/60.z-50.pointer-events-none",
+          );
+          modalOverlay.classList.remove("pointer-events-none", "hidden");
+          loadFavorites();
+        });
+
+      document
+        .getElementById("close-favorites-modal")
+        .addEventListener("click", () => {
+          const modalOverlay = document.querySelector(
+            ".inset-0.fixed.bg-black\\/60.z-50",
+          );
+          modalOverlay.classList.add("pointer-events-none", "hidden");
+        });
     </script>
   </body>
 </html>
