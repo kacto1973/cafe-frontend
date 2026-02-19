@@ -42,34 +42,40 @@
       </nav>
     </header>
 
-    <section class="p-10 flex flex-col gap-5">
-      <h2 class="font-bold text-2xl">Tus Productos Favoritos</h2>
-      <div
-        class="flex flex-row gap-10 overflow-x-auto overflow-y-hidden"
-        id="favorites-list"
-      ></div>
-    </section>
-    <section class="p-10 flex flex-col gap-5">
-      <div class="flex flex-row items-center mb-5">
-        <h2 class="font-bold text-2xl">Nuestros Productos</h2>
-        <input
-          id="search-products"
-          type="text"
-          placeholder="Buscar productos..."
-          class="p-2 border border-gray-400 rounded-md w-[500px] ml-10"
-        />
-        <select
-          class="p-2 border border-gray-400 rounded-md ml-10"
-          id="sort-select"
-        >
-          <option value="default">Ordenar por</option>
-          <option value="price-asc">Precio: Menor a Mayor</option>
-          <option value="price-desc">Precio: Mayor a Menor</option>
-          <option value="popularity-desc">Popularidad</option>
-        </select>
-      </div>
-      <div class="grid grid-cols-3 gap-5" id="products-list"></div>
-    </section>
+    <main class="px-10">
+      <section class="p-10 flex flex-col gap-5">
+        <h2 class="font-bold text-2xl">Tus Productos Favoritos</h2>
+        <div
+          class="flex flex-row gap-10 overflow-x-auto overflow-y-hidden"
+          id="favorites-list"
+        ></div>
+      </section>
+      <section class="p-10 flex flex-col gap-5">
+        <div class="flex flex-row items-center mb-5">
+          <h2 class="font-bold text-2xl">Nuestros Productos</h2>
+          <input
+            id="search-products"
+            type="text"
+            placeholder="Buscar productos..."
+            class="p-2 border border-gray-400 rounded-md w-[500px] ml-10"
+          />
+          <select
+            class="p-2 border border-gray-400 rounded-md ml-10"
+            id="sort-select"
+          >
+            <option value="default">Ordenar por</option>
+            <option value="price-asc">Precio: Menor a Mayor</option>
+            <option value="price-desc">Precio: Mayor a Menor</option>
+            <option value="popularity-desc">Popularidad</option>
+          </select>
+        </div>
+        <div
+          class="flex flex-row flex-wrap gap-5 justify-between"
+          id="products-list"
+        ></div>
+      </section>
+    </main>
+
     <footer class="bg-black text-white p-10 flex flex-col">
       <p class="font-bold text-lg">Tienda de Café "Las 3 Torres"</p>
       <p class="font-light text-md">
@@ -412,19 +418,23 @@
       const createFavoriteCard = (coffee) => {
         const card = document.createElement("article");
         card.className =
-          "flex flex-col gap-2 rounded-md min-w-[400px] max-w-[400px] overflow-hidden border-1 border-gray-400 transition-transform duration-300 hover:translate-y-[-5px] ";
+          "relative flex flex-col mt-4 rounded-md min-w-[400px] max-w-[400px] overflow-hidden border-1 border-gray-400 transition-transform duration-300 hover:translate-y-[-5px] ";
         card.innerHTML = `
-                  <img class="w-full h-[200px] object-cover transition-transform hover:scale-105 duration-500" src="${coffee.imagen}" alt="${coffee.titulo}" />
+  <img class="w-full h-[200px] object-cover transition-transform hover:scale-105 duration-500" src="${coffee.imagen}" alt="${coffee.titulo}" />
+  
+  <!-- Corazón como botón de remover (reemplaza al botón rosa) -->
+  <img id="remove-favorite-button" class="absolute right-4 top-4 bg-white p-1 rounded-full cursor-pointer transition-transform duration-300 hover:translate-y-[-3px] hover:bg-red-100" width="30" src="assets/heart-svgrepo-com.svg" alt="Remover de favoritos">
 
-                  <div class="flex flex-col p-5 gap-3">
-                    <h3 class="font-bold text-xl">${coffee.titulo} - <span class="text-green-500">$${coffee.precio}</span></h3>
-                    <p class="text-md">${coffee.descripcion}</p>
-                    <div class="flex flex-row pt-4">
-                      <button id="remove-favorite-button" class="bg-red-400 text-white p-2 rounded-md hover:bg-red-500 transition-colors duration-300 mr-2 cursor-pointer">Remover</button>
-                      <button class="ml-2 bg-green-600 text-white p-2 rounded-md hover:bg-green-700 transition-colors duration-300 cursor-pointer">Ordenar</button>
-                    </div>
-                  </div>
-               `;
+  <div class="relative flex flex-col p-5 gap-3">
+    <span class="absolute right-4 top-4 text-amber-700 font-bold">$${coffee.precio}</span>
+    <h3 class="font-bold text-xl">${coffee.titulo}</h3>
+    <p class="text-gray-500">${coffee.descripcion}</p>
+    <span class="text-yellow-400 absolute right-4 top-12">⭐ ${coffee.popularidad}</span>
+    
+    <!-- Botón de ordenar a todo lo ancho -->
+    <button class="w-full mt-2 bg-black text-white p-2 rounded-md hover:bg-gray-800 transition-colors duration-300 cursor-pointer">Ordenar Ahora</button>
+  </div>
+`;
 
         const removeButton = card.querySelector("#remove-favorite-button");
         removeButton.addEventListener("click", () => {
@@ -437,18 +447,17 @@
       const createProductCard = (coffee) => {
         const card = document.createElement("article");
         card.className =
-          "flex flex-col rounded-md min-w-[400px] overflow-hidden border-1 border-gray-400 transition-transform duration-300 hover:translate-y-[-5px] ";
+          "relative flex flex-col mt-4 rounded-md w-[300px] overflow-hidden border-1 border-gray-400 transition-transform duration-300 hover:translate-y-[-5px] ";
         card.innerHTML = `
                   <img class="w-full h-[200px] object-cover transition-transform hover:scale-105 duration-500" src="${coffee.imagen}" alt="${coffee.titulo}" />
+                  <img id="favorite-button" class="absolute right-4 top-4 bg-white p-1 rounded-full cursor-pointer transition-transform duration-300 hover:translate-y-[-3px] " width="30" src="assets/heart-svgrepo-com.svg" alt="Favorito">
 
                   <div class="relative flex flex-col p-5 gap-3">
-                    <h3 class="font-bold text-xl">${coffee.titulo} - <span class="text-green-500">$${coffee.precio}</span></h3>
-                    <p class="text-md">${coffee.descripcion}</p>
-                    <div class="flex flex-row pt-4">
-                      <button id="favorite-button" class="bg-yellow-400 text-white p-2 rounded-md hover:bg-yellow-500 transition-colors duration-300 mr-2 cursor-pointer">Favorito</button>
-                      <button class="ml-2 bg-green-600 text-white p-2 rounded-md hover:bg-green-700 transition-colors duration-300 cursor-pointer">Ordenar</button>
-                    </div>
-                    <span class="font-bold absolute right-5 bottom-5 px-4 py-2 border border-2 border-gray-300 rounded-full">⭐ ${coffee.popularidad}</span>
+                    <span class="absolute right-4 top-4 text-amber-700 font-bold">$${coffee.precio}</span>
+                    <h3 class="font-bold text-xl">${coffee.titulo}</h3>
+                    <p class="text-gray-500">${coffee.descripcion}</p>
+                      <button class="mt-2 bg-black text-white p-2 rounded-md hover:bg-gray-800 transition-colors duration-300 cursor-pointer">Agregar al Carrito</button>
+                    <span class="text-yellow-400 absolute right-4 top-12">⭐ ${coffee.popularidad}</span>
                   </div>
                `;
 
