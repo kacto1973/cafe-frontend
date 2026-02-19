@@ -1,6 +1,6 @@
 <div align="center">
 
-# ☕ Café-Frontend
+# ☕ Café-Frontend las Tres Torres
 
 ### Visita nuestra lista de productos
 
@@ -52,4 +52,4 @@ npm run dev
 
 ## 🌐 Demo en vivo
 
-**👉 [cafe-frontend-program.netlify.app](https://cafe-frontend-program.netlify.app/)**
+**👉 [tres-torres.netlify.app](https://tres-torres.netlify.app/)**
